@@ -15,36 +15,41 @@ import json
 # board = settings["specific_board_id"]
 # ---------------------------------------- Fin du ne pas mettre là
 
-class Trello_API_get_labels(object):
-    """Trello_API_get_labels
+class Trello_API_boards(object):
+    """Trello_API_boards
     =======
-    A set of function wich handle data returned by Koha API 'getBiblioPublic' 
-    https://api.koha-community.org/20.11.html#operation/getBiblioPublic
     On init take as arguments :
-    - biblionumber (Koha identifier)
-    - Koha server URL
-    - [optional] : format (the response format) :
-        - "application/marcxml+xml" (default)
-        - "application/marc-in-json"
-        - "application/marc"
-        - "text/plain"
+    - api {str} : name of the API to call
+        - "get_labels"
+        - "get_lists"
+    - API_KEY {str}
+    - TOKEN {str}
+    - [optional] service {str} : name of the service
+    - data {dict} : all informations needed to use the API
 """
 
-    def __init__(self, board, API_KEY, TOKEN, service='Trello_Get_Labels'):
+    def __init__(self, api, API_KEY, TOKEN, service='Trello_Boards', data={}):
         # self.logger = logging.getLogger(service)
         self.endpoint = "https://api.trello.com/1/boards/"
-        self.board = board
         self.service = service
-        url = self.endpoint + "/" + self.board + "/labels"
-        payload = {
+        self.payload = {
             'key': API_KEY,
-            'token': TOKEN,
-            "limit":1000
+            'token': TOKEN
             }
-        headers = {
+        self.headers = {
             "Accept":"application/json"
             }
-        r = requests.request("GET", url, headers=headers, params=payload)
+
+        # Différentes API
+        if api == "get_labels":
+            self.payload["limit"] = 1000
+            self.HTTPmethod = "GET"
+            self.url = self.endpoint + "/" + data["id"] + "/labels"
+        elif api == "get_lists":
+            self.HTTPmethod = "GET"
+            self.url = self.endpoint + "/" + data["id"] + "/lists"
+        
+        r = requests.request(self.HTTPmethod, self.url, headers=self.headers, params=self.payload)
         try:
             r.raise_for_status()  
         except requests.exceptions.HTTPError:

@@ -2,3 +2,4 @@ settings.json
 __pycache__
 open_card_by_cardnumber.py
 mes_donnes/
+trello.bat

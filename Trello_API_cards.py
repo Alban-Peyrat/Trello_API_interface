@@ -38,7 +38,6 @@ class Trello_API_cards(object):
         # self.logger = logging.getLogger(service)
         self.endpoint = "https://api.trello.com/1/cards"
         self.service = service
-        # url = self.endpoint
         self.payload = {
             'key': API_KEY,
             'token': TOKEN
@@ -62,16 +61,6 @@ class Trello_API_cards(object):
             for param in param_list:
                 if param in data:
                     self.payload[param] = data[param]
-            # if "pos" in data:
-            #     self.payload["pos"] = data["pos"]
-            # if "idList" in data:
-            #     self.payload["idList"] = data["idList"]
-            # if "idLabels" in data:
-            #     self.payload["idLabels"] = data["idLabels"]
-            # if "name" in data:
-            #     self.payload["name"] = data["name"]
-            # if "desc" in data:
-            #     self.payload["desc"] = data["desc"]
             self.HTTPmethod = "PUT"
             self.url = self.endpoint + "/{}".format(data["id"])
         elif api == "new_comment":

@@ -7,7 +7,8 @@ import re
 
 # Internal import
 from ArchiRes_Theme.theme import *
-import Trello_API_get_labels as get_labels
+# import Trello_API_get_labels as get_labels
+import Trello_API_boards as boards
 import Trello_API_cards as cards
 
 service = "Python_Trello_Add_Card"
@@ -33,7 +34,8 @@ label_urgent = settings["label_urgent_id"]
 label_add_card = settings["label_created_by_python_add_card"]
 
 # Get all labels
-LABELS = get_labels.Trello_API_get_labels(board, API_KEY=API_KEY, TOKEN=TOKEN).filter_by_color()
+# LABELS = get_labels.Trello_API_get_labels(board, API_KEY=API_KEY, TOKEN=TOKEN).filter_by_color()
+LABELS = boards.Trello_API_boards(api="get_labels", API_KEY=API_KEY, TOKEN=TOKEN, data={"id":board}).filter_by_color()
 
 # Creates the selections for labels in the GUI
 LABELS_GUI = {}
@@ -105,6 +107,7 @@ event, val = window.read()
 
 
 if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
+    print("Application quittée par l'usager")
     exit()
 
 # Gather card infos
@@ -204,7 +207,7 @@ cards.Trello_API_cards(api="remove_label",
 )
 
 # Update la description
-new_card["desc"] = "__[N° ticket ArchiRès : {}]({})__\n".format(new_card["idShort"], new_card["shortUrl"]) + new_card["desc"]
+new_card["desc"] = "__[Ticket #AR{}]({})__\n".format(new_card["idShort"], new_card["shortUrl"]) + new_card["desc"]
 new_card = cards.Trello_API_cards(api="update_card",
     API_KEY=API_KEY,
     TOKEN=TOKEN,
