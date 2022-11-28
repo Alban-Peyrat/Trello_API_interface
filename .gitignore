@@ -1,4 +1,5 @@
 settings.json
+js_local_settings.js
 __pycache__
 open_card_by_cardnumber.py
 mes_donnes/

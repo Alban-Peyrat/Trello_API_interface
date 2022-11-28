@@ -1,0 +1,97 @@
+* {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 16px;
+    color: #EBE0EB;
+}
+
+html {
+    background-color: #121212;
+}
+
+body {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+header p {
+    text-align: center;
+}
+
+#title {
+    font-size: 3em;
+    font-weight: bold;
+}
+
+#subtitle {
+    font-size: 2.5em;
+}
+
+#subtitle a {
+    font-size: inherit;
+}
+
+#filter-management {
+    position:sticky;
+    top:5px;
+    width:15%;
+    padding-left: 85%;
+}
+
+#filter-management button {
+    width: 100%;
+    text-align: center;
+    padding: 5px 0px 5px 0px;
+    cursor: pointer;
+    background-color: #9FDEFF;
+    color: #121212;
+    border: 0;
+    font-size: 1.15em;
+}
+
+h1 {font-size: 2em;}
+
+.hide {display: none;}
+
+.num-tickets a {
+    display: block;
+    font-weight: bold;
+}
+
+.labels {line-height: 1.4em;}
+
+.label {color:#121212;}
+
+.label, .member {
+    padding: 1px 3px 1px 3px;
+    cursor: pointer;
+    border-radius: 25px;
+}
+
+table {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    table-layout: fixed;
+}
+
+thead th {
+    background-color: #660000;
+}
+
+td {
+    padding: 5px;
+    word-wrap: break-word;
+}
+
+th:nth-child(1), th:nth-child(3) {
+    width: 10%;
+}
+
+th:nth-child(2) {
+    width: 20%;
+}
+
+th:nth-child(4) {
+    width: 60%;
+}

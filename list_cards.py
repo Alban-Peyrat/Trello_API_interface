@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# VOIR LIST_TICKETS pour la version JS
+
 # External import
 # import PySimpleGUI as sg
 import json

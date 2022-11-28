@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <!-- Séparer le CSS et le JS finalement-->
+<head>
+    <title>SID ArchiRès - Liste des tickets ouverts dans Suivi_des_demandes</title>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="ArchiRes_theme/favicon.ico"/>
+    <link rel="stylesheet" href="style.css">
+    <script src="../js_local_settings.js" charset="UTF-8"></script>
+</head>
+<header>
+    <p id="title">SID ArchiRès</p>
+    <p id="subtitle">Liste des tickets ouverts dans <a href="">Suivi_des_demandes</a></p>
+</header>
+<body>
+    <div id="filter-management">
+        <button id="unfilter-all" class="hide" onclick="unfilterAll()">Retirer tous les filtres</button>
+    </div>
+    <div id="list-id">
+        <!--<h1>Name of the list</h1>
+        <table id="table-list-id">
+            <thead>
+                <tr>
+                    <th>Numéro de ticket</th>
+                    <th>Labels</th>
+                    <th>Membres assignés</th>
+                    <th>Nom du ticket</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="num-tickets"><a href="" target="_blank">#AR71</a></td>
+                    <td class="labels"><span class="label" data-id="label-12345" style="background-color: couleurTrello-les-tirets;">Bokeh</span> <span class="label" style="background-color: blue;">ArchiRès</span> <span class="label" style="background-color: cyan;">Dev&nbsp;-&nbsp;Python</span></td>
+                    <td class="members"><span class="member" data-id="member-12345">Alban</span>, <span class="member memberId">Louise</span></td>
+                    <td class="name">[Bokeh] Les inputs texte se vident de leur valeur quand on revient dessus depuis le bouton retour au formulaire</td>
+                </tr>
+
+            </tbody>
+        </table>-->
+    </div>
+</body>
+<script src="../api_js/boards.js" charset="UTF-8"></script>
+<script src="../api_js/lists.js" charset="UTF-8"></script>
+<script src="generate_list.js" charset="UTF-8"></script>
+<script src="interface.js" charset="UTF-8"></script>
+</html>
