@@ -38,5 +38,5 @@ function unfilterAll(){
 
 // Toogles the ticket description
 function toggleDesc(){
-    this.querySelector("p").classList.toggle("hide");
+    this.querySelector("div").classList.remove("hide");
 }

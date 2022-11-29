@@ -34,6 +34,9 @@ var trelloAllLists = trelloApiBoards("get_lists",
     service = service,
     data={id:settings["specific_board_id"]});
 
+// Prepare Markdown converter
+// Uses https://github.com/showdownjs/showdown
+var converter = new showdown.Converter()
 
 // For each list
 trelloAllLists.then(lists => {
@@ -100,6 +103,9 @@ trelloAllLists.then(lists => {
                     labels.appendChild(labelElm);
                     labels.append(" ");
                 })
+                if (labels.lastChild){
+                    labels.lastChild.remove();
+                }
                 tr.appendChild(labels);
 
                 // Creates assigned members
@@ -111,23 +117,27 @@ trelloAllLists.then(lists => {
                     memberElm.setAttribute("class", "member");
                     memberElm.setAttribute("data-id", `member-${member}`);
                     memberElm.textContent = members_mapping[member];
-                    console.log(member, members_mapping[member])
                     members.appendChild(memberElm);
                     members.append(", ");
                 })
+                if (members.lastChild){
+                    members.lastChild.remove();
+                }
                 tr.appendChild(members);
 
                 // Creates the tickets's name
-                let nameElm = document.createElement("td");
-                nameElm.addEventListener('click', toggleDesc, false);
-                nameElm.setAttribute("class", "name");
+                let nameTd = document.createElement("td");
+                nameTd.addEventListener('click', toggleDesc, false);
+                nameTd.setAttribute("class", "name");
+                let nameElm = document.createElement("p");
                 nameElm.textContent = card.name;
+                nameTd.appendChild(nameElm);
                 // Creates the ticket's description
-                let desc = document.createElement("p");
-                desc.setAttribute("class","hide");
-                desc.textContent = card.desc;
-                nameElm.appendChild(desc)
-                tr.appendChild(nameElm)
+                let descDiv = document.createElement("div");
+                descDiv.setAttribute("class","desc hide");
+                descDiv.innerHTML = converter.makeHtml(card.desc);
+                nameTd.appendChild(descDiv);
+                tr.appendChild(nameTd);
 
                 // Appends the line to the table
                 tbody.appendChild(tr)

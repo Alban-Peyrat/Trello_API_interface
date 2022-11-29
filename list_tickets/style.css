@@ -68,11 +68,22 @@ h1 {font-size: 2em;}
     border-radius: 25px;
 }
 
+.name div {white-space: pre-wrap;}
+
+.desc {
+    margin: 2%;
+    background-color: #9FDEFF;
+    padding: 0 1% 0 1%;
+}
+
+.desc * {color:#121212}
+
 table {
     width: 95%;
     margin-left: auto;
     margin-right: auto;
     table-layout: fixed;
+    border-collapse: collapse;
 }
 
 thead th {
@@ -82,6 +93,9 @@ thead th {
 td {
     padding: 5px;
     word-wrap: break-word;
+    border-style: #EBE0EB;
+    border-width: 1px;
+    border-style: solid;
 }
 
 th:nth-child(1), th:nth-child(3) {
