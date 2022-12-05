@@ -27,6 +27,51 @@ trelloMembers.then(members => {
     })
 })
 
+// Creates all filters types
+for (color in settings["label_colors"]){
+    let labelP = document.createElement("p");
+    labelP.innerHTML = `<span class="label" style="background-color:${color_mapping[settings["label_colors"][color]]}" data-trello-color="${settings["label_colors"][color]}">Label ${color}\u00A0:</span> `;
+    document.getElementById("filter-management").appendChild(labelP);
+}
+    // Filtre pour les membres
+let memberP = document.createElement("p");
+memberP.innerHTML = '<span id="member-filter">Membres\u00A0:</span> ';
+document.getElementById("filter-management").appendChild(memberP);
+
+// Get all labels
+var trelloLabels  = trelloApiBoards("get_labels",
+    settings["API_KEY"],
+    settings["TOKEN"],
+    service = service,
+    data={id:settings["specific_board_id"]});
+
+trelloLabels.then(labels => {
+    labels.forEach(label => {
+        // Creates the labels
+        let labelElm = document.createElement("span");
+        labelElm.addEventListener('click', filter, false);
+        labelElm.setAttribute("data-id", `label-${label.id}`);
+        labelElm.textContent = label.name.replaceAll(" ", "\u00A0");
+        document.querySelector(`#filter-management p span[data-trello-color="${label["color"]}"]`).parentElement.appendChild(labelElm);
+        document.querySelector(`#filter-management p span[data-trello-color="${label["color"]}"]`).parentElement.append(", ");   
+    })
+    // Ajoute les membres
+    for (memberId in members_mapping){
+        let memberElm = document.createElement("span");
+        memberElm.addEventListener('click', filter, false);
+        memberElm.setAttribute("data-id", `member-${memberId}`);
+        memberElm.textContent = members_mapping[memberId];
+        document.getElementById("member-filter").parentElement.appendChild(memberElm);
+        document.getElementById("member-filter").parentElement.append(", ");
+    }
+    
+    document.querySelectorAll("#filter-management p").forEach(elm =>{
+    if (elm.lastChild){
+        elm.lastChild.remove();
+    }
+    })
+})
+
 // Get all lists
 var trelloAllLists = trelloApiBoards("get_lists",
     settings["API_KEY"],

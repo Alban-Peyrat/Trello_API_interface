@@ -6,10 +6,11 @@ function trelloApiBoards(api, API_KEY, TOKEN, service = 'Trello_Boards', data={}
         }
     }
     let url;
+    let params = "";
     // Différentes API
     switch (api){
         case "get_labels":
-            // limit = 1000
+            params = "&limit=1000"
             init["method"] = "GET";
             url = endpoint + "/" + data["id"] + "/labels";
             break;
@@ -23,7 +24,7 @@ function trelloApiBoards(api, API_KEY, TOKEN, service = 'Trello_Boards', data={}
             break;
     }
 
-    let responseData = fetch(`${url}?key=${API_KEY}&token=${TOKEN}`, init)
+    let responseData = fetch(`${url}?key=${API_KEY}&token=${TOKEN}${params}`, init)
     .then(response => {
         console.log(`Response: ${response.status} ${response.statusText}\n${url}`);
         return response.json()

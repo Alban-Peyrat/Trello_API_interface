@@ -31,14 +31,14 @@ header p {
     font-size: inherit;
 }
 
-#filter-management {
+#filter-management-btn {
     position:sticky;
     top:5px;
     width:15%;
     padding-left: 85%;
 }
 
-#filter-management button {
+#filter-management-btn button {
     width: 100%;
     text-align: center;
     padding: 5px 0px 5px 0px;
@@ -47,6 +47,10 @@ header p {
     color: #121212;
     border: 0;
     font-size: 1.15em;
+}
+
+#filter-management p span{
+    cursor: pointer;
 }
 
 h1 {font-size: 2em;}

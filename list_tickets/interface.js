@@ -1,3 +1,5 @@
+// Adds the link to the board in the subtitle
+document.getElementById("subtitle").querySelector("a").setAttribute("href", `https://www.trello.com/b/${settings["specific_board_id"]}`)
 
 //Function that hides tickets without this id
 function filter() {
