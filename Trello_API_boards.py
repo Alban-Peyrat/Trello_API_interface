@@ -49,13 +49,17 @@ class Trello_API_boards(object):
             self.HTTPmethod = "GET"
             self.url = self.endpoint + "/" + data["id"] + "/lists"
         
-        r = requests.request(self.HTTPmethod, self.url, headers=self.headers, params=self.payload)
         try:
+            r = requests.request(self.HTTPmethod, self.url, headers=self.headers, params=self.payload)
             r.raise_for_status()  
         except requests.exceptions.HTTPError:
             self.status = 'Error'
             # self.logger.error("{} :: {} :: HTTP Status: {} || Method: {} || URL: {} || Response: {}".format(query, service, r.status_code, r.request.method, r.url, r.text))
             self.error_msg = "Biblionumber inconnu ou service indisponible"
+        except requests.exceptions.RequestException as generic_error:
+            self.status = 'Error'
+            # self.logger.error("{} :: Koha_API_PublicBiblio_Init :: Generic exception || URL: {} || {}".format(bibnb, url, generic_error))
+            self.error_msg = "Exception générique, voir les logs pour plus de détails"
         else:
             self.response = r.content.decode('utf-8')
             self.data = json.loads(self.response)

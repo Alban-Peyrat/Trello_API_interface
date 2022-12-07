@@ -47,21 +47,25 @@ class Trello_API_Search(object):
         headers = {
             "Accept":"application/json"
             }
-        r = requests.request("GET", url, headers=headers, params=payload)
         try:
+            r = requests.request("GET", url, headers=headers, params=payload)
             r.raise_for_status()  
         except requests.exceptions.HTTPError:
             self.status = 'Error'
             # self.logger.error("{} :: {} :: HTTP Status: {} || Method: {} || URL: {} || Response: {}".format(query, service, r.status_code, r.request.method, r.url, r.text))
             self.error_msg = "Biblionumber inconnu ou service indisponible"
+        except requests.exceptions.RequestException as generic_error:
+            self.status = 'Error'
+            # self.logger.error("{} :: Koha_API_PublicBiblio_Init :: Generic exception || URL: {} || {}".format(bibnb, url, generic_error))
+            self.error_msg = "Exception générique, voir les logs pour plus de détails"
         else:
-            self.record = r.content.decode('utf-8')
+            self.response = r.content.decode('utf-8')
             self.status = 'Success'
             # self.logger.debug("{} :: {} :: Notice trouvée".format(query, service))
-            print(self.record)
+            print(self.response)
             # print(self.text)
 
 # Lire ça https://support.atlassian.com/trello/docs/searching-for-cards-all-boards/
-query = "idShort:26"
+query = 'comment:"N° ticket ArchiRès : 111"'
 Trello_API_Search(query, API_KEY, TOKEN)
 # print(json.dumps(json.loads(response.text), sort_keys=True, indent=4, separators=(",", ": ")))
