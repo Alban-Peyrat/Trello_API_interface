@@ -27,6 +27,19 @@ trelloMembers.then(members => {
     })
 })
 
+// #AR189
+//https://stackoverflow.com/questions/8837454/sort-array-of-objects-by-single-key-with-date-value
+function sort_arr_of_obj_by_key_val(arr, key){
+    return arr.sort(function(a, b) {
+        let keyA = a[key];
+        let keyB = b[key];
+        // Compare the 2 values
+        if (keyA < keyB) return -1;
+        if (keyA > keyB) return 1;
+        return 0;
+      });
+}
+
 // Creates all filters types
 for (color in settings["label_colors"]){
     let labelP = document.createElement("p");
@@ -46,6 +59,9 @@ var trelloLabels  = trelloApiBoards("get_labels",
     data={id:settings["specific_board_id"]});
 
 trelloLabels.then(labels => {
+    // #AR189 : sort labels
+    labels = sort_arr_of_obj_by_key_val(labels, "name");
+    
     labels.forEach(label => {
         // Creates the labels
         let labelElm = document.createElement("span");
