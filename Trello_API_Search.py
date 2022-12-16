@@ -35,20 +35,21 @@ class Trello_API_Search(object):
         self.endpoint = "https://api.trello.com/1/search"
         self.service = service
         self.query = str(query)
-        url = self.endpoint
-        payload = {
+        self.url = self.endpoint
+        self.payload = {
             'query': self.query,
             'key': API_KEY,
             'token': TOKEN,
             "idBoards": [board], #temporaire
             "modelTypes": ["cards"], #temporaire
-            "boards_limit":1000
+            "card_fields": "name,desc,idBoard,idLabels,idList,idMembers,labels,shortLink,shortUrl,url",#temporaire
+            "cards_limit":1000
             }
-        headers = {
+        self.headers = {
             "Accept":"application/json"
             }
         try:
-            r = requests.request("GET", url, headers=headers, params=payload)
+            r = requests.request("GET", self.url, headers=self.headers, params=self.payload)
             r.raise_for_status()  
         except requests.exceptions.HTTPError:
             self.status = 'Error'
@@ -60,12 +61,9 @@ class Trello_API_Search(object):
             self.error_msg = "Exception générique, voir les logs pour plus de détails"
         else:
             self.response = r.content.decode('utf-8')
+            self.data = json.loads(self.response)
             self.status = 'Success'
             # self.logger.debug("{} :: {} :: Notice trouvée".format(query, service))
-            print(self.response)
-            # print(self.text)
 
 # Lire ça https://support.atlassian.com/trello/docs/searching-for-cards-all-boards/
-query = 'comment:"N° ticket ArchiRès : 111"'
-Trello_API_Search(query, API_KEY, TOKEN)
-# print(json.dumps(json.loads(response.text), sort_keys=True, indent=4, separators=(",", ": ")))
+# query = 'comment:"N° ticket ArchiRès : 111" board:IDDDDD'
