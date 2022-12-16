@@ -89,12 +89,14 @@ trelloAllLists.then(lists => {
 
         // Generates name of the list
         let listName = document.createElement("h1");
-        listName.textContent = list.name;
+        listName.setAttribute("data-list-id", `${list.id}`);
+        listName.setAttribute("class", "list-name");
+        listName.innerHTML = list.name + ` (<span data-list-id="${list.id}"></span> tickets)`;
         parent.appendChild(listName);
 
         // Creates the table
         let table = document.createElement("table");
-        table.setAttribute("id", `table-${list.id}`)
+        table.setAttribute("id", `table-${list.id}`);
 
         // Creates the thead
         let thead = document.createElement("thead");
@@ -120,6 +122,7 @@ trelloAllLists.then(lists => {
 
         // For each card in the list
         trelloListCards.then(cards => {
+            document.querySelector(`h1[data-list-id='${list.id}'] span[data-list-id='${list.id}']`).textContent = cards.length;
             cards.forEach(card => {
 
                 // Creates the line

@@ -25,6 +25,9 @@ function filter() {
             tickets[ii].classList.add("hide");
         }
     }
+
+    // Updates all tickets count
+    update_all_lists_ticket_count()
 };
 
 // Shows every ticket again
@@ -36,9 +39,24 @@ function unfilterAll(){
     for (let ii = 0; ii < tickets.length; ii++){
         tickets[ii].classList.remove("hide");
     }
+
+    // Updates all tickets count
+    update_all_lists_ticket_count()
 }
 
 // Toogles the ticket description
 function toggleDesc(){
     this.querySelector("div").classList.remove("hide");
+}
+
+// Updates the number of tickets in the list
+function tickets_count(listId){
+    document.querySelector(`h1[data-list-id='${listId}'] span[data-list-id='${listId}']`).textContent = document.querySelectorAll(`table[id='table-${listId}'] tbody tr:not(.hide)`).length;
+}
+
+// Updates all tickets list count
+function update_all_lists_ticket_count(){
+    document.querySelectorAll("h1.list-name").forEach(list => {
+        tickets_count(list.dataset.listId)
+    })
 }
