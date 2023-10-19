@@ -58,16 +58,26 @@ var trelloLabels  = trelloApiBoards("get_labels",
     service = service,
     data={id:settings["specific_board_id"]});
 
+var trelloLabelsCount = {};
+
 trelloLabels.then(labels => {
     // #AR189 : sort labels
     labels = sort_arr_of_obj_by_key_val(labels, "name");
     
     labels.forEach(label => {
+        // To count tickets
+        trelloLabelsCount[label.id] = {
+            "total":0,
+            "open":0,
+            "closed":0
+        };
+
         // Creates the labels
         let labelElm = document.createElement("span");
         labelElm.addEventListener('click', filter, false);
         labelElm.setAttribute("data-id", `label-${label.id}`);
-        labelElm.textContent = label.name.replaceAll(" ", "\u00A0");
+        labelElm.innerHTML = label.name.replaceAll(" ", "\u00A0");
+        labelElm.innerHTML += ` <span class="label-count">(<span class="label-count-open"></span>, <span class="label-count-closed"></span> / <span class="label-count-total"></span>)</span>`
         document.querySelector(`#filter-management p span[data-trello-color="${label["color"]}"]`).parentElement.appendChild(labelElm);
         document.querySelector(`#filter-management p span[data-trello-color="${label["color"]}"]`).parentElement.append(", ");   
     })
@@ -95,18 +105,39 @@ var trelloAllCards = trelloApiBoards("get_all_cards",
     service = service,
     data={id:settings["specific_board_id"]});
 trelloAllCards.then(cards => {
+    // general stats (total, open / closed)
     document.querySelector("body #list-toc ul #total-nb-tickets #total-nb-tickets-text").textContent = cards.length;
     let nb_open_tickets = 0;
     let nb_closed_tickets = 0;
     cards.forEach(card => {
+        // general stats
         if (card.closed){
             nb_closed_tickets++;
         }else {
             nb_open_tickets++;
         }
+
+        // Label stats
+        card["idLabels"].forEach(label =>{
+            let thisCount = trelloLabelsCount[label];
+            thisCount["total"]++;
+            if (card.closed){
+                thisCount["closed"]++;
+            }else {
+                thisCount["open"]++;
+            }
+
+        })
     })
+    // Display stats
     document.querySelector("body #list-toc ul #total-nb-tickets #total-open-tickets span").textContent = nb_open_tickets;
     document.querySelector("body #list-toc ul #total-nb-tickets #total-closed-tickets span").textContent = nb_closed_tickets;
+    for (const [key, value] of Object.entries(trelloLabelsCount)){
+        let labelSpan = document.querySelector(`body #filter-management p span[data-id="label-${key}"] span.label-count`);
+        labelSpan.querySelector("span.label-count-open").textContent = value["open"];
+        labelSpan.querySelector("span.label-count-closed").textContent = value["closed"];
+        labelSpan.querySelector("span.label-count-total").textContent = value["total"];
+    }
 })
 
 // Get all lists

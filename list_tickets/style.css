@@ -53,13 +53,22 @@ header p {
     cursor: pointer;
 }
 
-/* Nb of tickets */
+/* Nb of tickets general */
 #total-nb-tickets {
     font-weight: bold;
 }
 
 #total-nb-tickets span {
     font-style: 2em;
+}
+
+/* Nb of tickets (labels) */
+#filter-management span.label-count-closed {
+    text-decoration: line-through;
+}
+
+#filter-management span.label-count-total {
+    font-weight: bold;
 }
 
 
