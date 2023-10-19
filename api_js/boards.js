@@ -22,6 +22,14 @@ function trelloApiBoards(api, API_KEY, TOKEN, service = 'Trello_Boards', data={}
             init["method"] = "GET";
             url = endpoint + "/" + data["id"] + "/members";
             break;
+        case "get_cards":
+            init["method"] = "GET";
+            url = endpoint + "/" + data["id"] + "/cards";
+            break;
+        case "get_all_cards":
+            init["method"] = "GET";
+            url = endpoint + "/" + data["id"] + "/cards/all";
+            break;
     }
 
     let responseData = fetch(`${url}?key=${API_KEY}&token=${TOKEN}${params}`, init)

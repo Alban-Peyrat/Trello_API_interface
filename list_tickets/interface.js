@@ -51,7 +51,9 @@ function toggleDesc(){
 
 // Updates the number of tickets in the list
 function tickets_count(listId){
-    document.querySelector(`h1[data-list-id='${listId}'] span[data-list-id='${listId}']`).textContent = document.querySelectorAll(`table[id='table-${listId}'] tbody tr:not(.hide)`).length;
+    let nb_of_tickets = document.querySelectorAll(`table[id='table-${listId}'] tbody tr:not(.hide)`).length;
+    document.querySelector(`h1[data-list-id='${listId}'] span[data-list-id='${listId}']`).textContent = nb_of_tickets;
+    document.querySelector(`body #list-toc ul li[data-list-id='${listId}'] a span[data-list-id='${listId}']`).textContent = nb_of_tickets;
 }
 
 // Updates all tickets list count

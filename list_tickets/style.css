@@ -53,6 +53,17 @@ header p {
     cursor: pointer;
 }
 
+/* Nb of tickets */
+#total-nb-tickets {
+    font-weight: bold;
+}
+
+#total-nb-tickets span {
+    font-style: 2em;
+}
+
+
+
 h1 {font-size: 2em;}
 
 h1 * {font-size: inherit;}

@@ -46,7 +46,7 @@ for (color in settings["label_colors"]){
     labelP.innerHTML = `<span class="label" style="background-color:${color_mapping[settings["label_colors"][color]]}" data-trello-color="${settings["label_colors"][color]}">Label ${color}\u00A0:</span> `;
     document.getElementById("filter-management").appendChild(labelP);
 }
-    // Filtre pour les membres
+// Filtre pour les membres
 let memberP = document.createElement("p");
 memberP.innerHTML = '<span id="member-filter">Membres\u00A0:</span> ';
 document.getElementById("filter-management").appendChild(memberP);
@@ -88,6 +88,27 @@ trelloLabels.then(labels => {
     })
 })
 
+// Gets total number of tickets
+var trelloAllCards = trelloApiBoards("get_all_cards",
+    settings["API_KEY"],
+    settings["TOKEN"],
+    service = service,
+    data={id:settings["specific_board_id"]});
+trelloAllCards.then(cards => {
+    document.querySelector("body #list-toc ul #total-nb-tickets #total-nb-tickets-text").textContent = cards.length;
+    let nb_open_tickets = 0;
+    let nb_closed_tickets = 0;
+    cards.forEach(card => {
+        if (card.closed){
+            nb_closed_tickets++;
+        }else {
+            nb_open_tickets++;
+        }
+    })
+    document.querySelector("body #list-toc ul #total-nb-tickets #total-open-tickets span").textContent = nb_open_tickets;
+    document.querySelector("body #list-toc ul #total-nb-tickets #total-closed-tickets span").textContent = nb_closed_tickets;
+})
+
 // Get all lists
 var trelloAllLists = trelloApiBoards("get_lists",
     settings["API_KEY"],
@@ -103,8 +124,15 @@ var converter = new showdown.Converter()
 trelloAllLists.then(lists => {
     lists.forEach(list => {
 
+        // Generates the entry in the ToC
+        let tocEntry = document.createElement("li");
+        tocEntry.setAttribute("data-list-id", `${list.id}`);
+        tocEntry.innerHTML = `<a href="#header-${list.id}">${list.name} (<span data-list-id="${list.id}"></span> tickets)</a>`;
+        document.querySelector("body #list-toc ul").appendChild(tocEntry)
+
         // Generates name of the list
         let listName = document.createElement("h1");
+        listName.id = `header-${list.id}`;
         listName.setAttribute("data-list-id", `${list.id}`);
         listName.setAttribute("class", "list-name");
         listName.innerHTML = list.name + ` (<span data-list-id="${list.id}"></span> tickets)`;
@@ -138,7 +166,9 @@ trelloAllLists.then(lists => {
 
         // For each card in the list
         trelloListCards.then(cards => {
+            // Updates the number of open tickets
             document.querySelector(`h1[data-list-id='${list.id}'] span[data-list-id='${list.id}']`).textContent = cards.length;
+            document.querySelector(`body #list-toc ul li[data-list-id='${list.id}'] a span[data-list-id='${list.id}']`).textContent = cards.length;
             cards.forEach(card => {
 
                 // Creates the line

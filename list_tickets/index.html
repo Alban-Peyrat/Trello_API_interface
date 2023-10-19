@@ -4,7 +4,7 @@
 <head>
     <title>SID ArchiRès - Liste des tickets ouverts dans Suivi_des_demandes</title>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/png" href="ArchiRes_theme/favicon.ico"/>
+    <link rel="icon" type="image/png" href="../ArchiRes_theme/favicon.png"/>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
     <script src="../js_local_settings.js" charset="UTF-8"></script>
@@ -21,8 +21,19 @@
         <!-- <p><span class="label" style="background-color:#fdf4e7" data-trello-color="orange_light">Label TYPE_DEMANDE&nbsp;:</span> <span data-id="label-ID">Catalogage</span></p> -->
         <!-- <p><span id="member-filter">Membres&nbsp;:</span> <span data-id="member-ID">Nom du membre</span>, <span data-id="member-ID">Nom du membre</span></p> -->
     </div>
+    <div id="list-toc">
+        <ul>
+            <li id="total-nb-tickets">Nombre total de tickets : <span id="total-nb-tickets-text"></span>
+                <ul>
+                    <li id="total-open-tickets">Ouverts : <span></span></li>
+                    <li id="total-closed-tickets">Fermés : <span></span></li>
+                </ul>
+            </li>
+            <!-- <li data-list-id=""><a href="#header-list-id">Name of the list (XX tickets)</a></li> -->
+        </ul>
+    </div>
     <div id="list-id">
-        <!--<h1>Name of the list <span></span></h1>
+        <!--<h1 id="header-list-id">Name of the list <span></span></h1>
         <table id="table-list-id">
             <thead>
                 <tr>
