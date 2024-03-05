@@ -114,7 +114,7 @@ if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or click
 # Gather card infos
 card_infos = {}
 card_infos["name"] = val["name"]
-card_infos["desc"] = val["desc"]
+card_infos["desc"] = "\n" + val["desc"]
 
 # Labels
 card_infos["idLabels"] = []

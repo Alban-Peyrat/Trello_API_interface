@@ -6,9 +6,9 @@ function trelloApiSearch(query, API_KEY, TOKEN) {
         },
         method: "GET"
     }
-    let responseData = fetch(`${endpoint}?query=${query}&key=${API_KEY}&token=${TOKEN}`, init)
+    let responseData = fetch(`${endpoint}?query=${query}&cards_limit=1000&key=${API_KEY}&token=${TOKEN}`, init)
     .then(response => {
-        console.log(`Response: ${response.status} ${response.statusText}\n${url}`);
+        console.log(`Response: ${response.status} ${response.statusText}\n${endpoint}`);
         return response.json()
     })
       .catch(err => console.error(err));

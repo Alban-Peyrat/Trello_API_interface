@@ -122,6 +122,7 @@
                     <td class="search-index">Statut :</td>
                     <td><input type="checkbox" name="status-open-checkbox" value="open" id="status-open-checkbox_open"><label for="status-open-checkbox_open">Ouvert</label></td>
                     <td><input type="checkbox" name="status-open-checkbox" value="closed" id="status-open-checkbox_closed"><label for="status-open-checkbox_closed">Fermé</label></td>
+                    <td>Restreindre à</br><select id="search-form-label-fermeture"><option value=""></option></select></td>
                 </tr>
                 <tr>
                     <td class="search-index">Tri :</td>
@@ -134,7 +135,7 @@
         <div id="simple-search-buttons">
             <button id="search-button">Lancer la recherche</button>
             <button id="advanced-edit-button">Passer en recherche avancée</button>
-            <button id="advanced-search-button">Vider la requête avancée</button>
+            <button id="empty-advanced-search-button">Vider la requête avancée</button>
             <button id="reset-search-button">Réinitialiser</button>
         </div>
         <div id="advanced-search-form">
@@ -143,13 +144,13 @@
         
     </div>
     <div id="search-results">
-        <h1>Résultats de la recherche</h1>
+        <h1>Résultats de la recherche <span id="search-nb-result"></span></h1>
         <p>Requête utilisée : <span id="query-used"></span></p>
         <table id="table-list-id">
             <thead>
                 <tr>
                     <th>Numéro de ticket</th>
-                    <th>Liste</th>
+                    <th>Type de demande</th>
                     <th>Labels</th>
                     <th>Nom du ticket</th>
                 </tr>
@@ -168,6 +169,7 @@
 </body>
 <script src="../api_js/boards.js" charset="UTF-8"></script>
 <script src="../api_js/lists.js" charset="UTF-8"></script>
+<script src="../api_js/search.js" charset="UTF-8"></script>
 <script src="ress.js" charset="UTF-8"></script>
 <script src="search_UI.js" charset="UTF-8"></script>
 </html>
