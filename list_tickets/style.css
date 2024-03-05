@@ -63,7 +63,7 @@ header p {
 }
 
 /* Nb of tickets (labels) */
-#filter-management span.label-count-closed {
+#filter-management span.label-count-closed, span.list-count-closed {
     text-decoration: line-through;
 }
 
@@ -71,11 +71,17 @@ header p {
     font-weight: bold;
 }
 
-
-
 h1 {font-size: 2em;}
 
 h1 * {font-size: inherit;}
+
+h1.list-opened:before {
+    content: "V ";
+}
+
+h1.list-closed:before {
+    content: "> ";
+}
 
 .hide {display: none;}
 
@@ -88,7 +94,7 @@ h1 * {font-size: inherit;}
 
 .label {color:#121212;}
 
-.label, .member {
+.label {
     padding: 1px 3px 1px 3px;
     cursor: pointer;
     border-radius: 25px;
@@ -103,6 +109,25 @@ h1 * {font-size: inherit;}
 }
 
 .desc * {color:#121212}
+
+#div-request-visibility-buttons {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 1em;
+}
+#div-request-visibility-buttons button {
+    font-size: 2em;
+    background-color: #9FDEFF;
+    color: #121212;
+    padding: 5px;
+}
+#div-request-visibility-buttons button.visibility-button-selected {
+    background-color: darkgray;
+}
+
+.card-global-visbility-hide {
+    display: none;
+}
 
 table {
     width: 95%;
@@ -124,14 +149,44 @@ td {
     border-style: solid;
 }
 
-th:nth-child(1), th:nth-child(3) {
+th:nth-child(1), th:nth-child(2) {
     width: 10%;
 }
 
-th:nth-child(2) {
+th:nth-child(3) {
     width: 20%;
 }
 
 th:nth-child(4) {
     width: 60%;
+}
+
+td.closed-request {
+    background-color: darkgray;
+}
+
+td.closed-request * {
+    text-decoration-line: line-through;
+}
+
+/* Search */
+#search-form #search-form-table .search-index {
+    text-align: right;
+    font-weight: bold;
+}
+
+#search-form #search-form-table td {text-align: center;}
+
+#search-form #search-form-table {
+    margin-bottom: 2em;
+}
+
+#search-form #simple-search-buttons {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 1em;
+}
+
+#search-results #query-used {
+    font-style: italic;
 }

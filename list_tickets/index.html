@@ -19,7 +19,6 @@
     </div>
     <div id="filter-management">
         <!-- <p><span class="label" style="background-color:#fdf4e7" data-trello-color="orange_light">Label TYPE_DEMANDE&nbsp;:</span> <span data-id="label-ID">Catalogage <span class="label-count">(<span class="label-count-open"></span>, <span class="label-count-open"></span> / <span class="label-count-total"></span>)</span></span></p> -->
-        <!-- <p><span id="member-filter">Membres&nbsp;:</span> <span data-id="member-ID">Nom du membre</span>, <span data-id="member-ID">Nom du membre</span></p> -->
     </div>
     <div id="list-toc">
         <ul>
@@ -32,14 +31,19 @@
             <!-- <li data-list-id=""><a href="#header-list-id">Name of the list (XX tickets)</a></li> -->
         </ul>
     </div>
+    <div id="div-request-visibility-buttons">
+        <button id="button-all-request" data-show-open="true" data-show-closed="true">Tous les tickets</button>
+        <button id="button-opened-request" class="visibility-button-selected" data-show-open="true" data-show-closed="false">Ouverts uniquement</button>
+        <button id="button-closed-request" data-show-open="false" data-show-closed="true">Fermés uniquement</button>
+    </div>
     <div id="list-id">
         <!--<h1 id="header-list-id">Name of the list <span></span></h1>
         <table id="table-list-id">
             <thead>
                 <tr>
                     <th>Numéro de ticket</th>
+                    <th>Type de demande</th>
                     <th>Labels</th>
-                    <th>Membres assignés</th>
                     <th>Nom du ticket</th>
                 </tr>
             </thead>
@@ -47,7 +51,6 @@
                 <tr>
                     <td class="num-tickets"><a href="" target="_blank">#AR71</a></td>
                     <td class="labels"><span class="label" data-id="label-12345" style="background-color: couleurTrello-les-tirets;">Bokeh</span> <span class="label" style="background-color: blue;">ArchiRès</span> <span class="label" style="background-color: cyan;">Dev&nbsp;-&nbsp;Python</span></td>
-                    <td class="members"><span class="member" data-id="member-12345">Alban</span>, <span class="member memberId">Louise</span></td>
                     <td class="name">[Bokeh] Les inputs texte se vident de leur valeur quand on revient dessus depuis le bouton retour au formulaire</td>
                 </tr>
 
@@ -57,6 +60,7 @@
 </body>
 <script src="../api_js/boards.js" charset="UTF-8"></script>
 <script src="../api_js/lists.js" charset="UTF-8"></script>
+<script src="ress.js" charset="UTF-8"></script>
 <script src="generate_list.js" charset="UTF-8"></script>
 <script src="interface.js" charset="UTF-8"></script>
 </html>

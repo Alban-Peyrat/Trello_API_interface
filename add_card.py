@@ -4,12 +4,13 @@
 import PySimpleGUI as sg
 import json
 import re
+from datetime import date
 
 # Internal import
 from ArchiRes_Theme.theme import *
 # import Trello_API_get_labels as get_labels
-import Trello_API_boards as boards
-import Trello_API_cards as cards
+import api_py.Trello_API_boards as boards
+import api_py.Trello_API_cards as cards
 
 service = "Python_Trello_Add_Card"
 
@@ -71,7 +72,7 @@ layout = [
 
     # Description
     [sg.Text("Description (format Markdown) :")],
-    [sg.Multiline("_Mail du 01/01/2000 (Louise Vallière)_\n", size=(50,5), expand_x=True, expand_y=True, key="desc")],
+    [sg.Multiline(f"_Mail du {date.today().strftime('%d/%m/%Y')} (Louise Vallière)_\n", size=(50,5), expand_x=True, expand_y=True, key="desc")],
 
     # Tickets liés
     [
@@ -230,6 +231,7 @@ print("Développement :", " ; ".join(val["labels_DEV"]))
 print("Écoles :", " ; ".join(val["labels_ECOLE"]))
 print(first_comment)
 print(ticket_comment)
+print("\n\n\n")
 
 # # --------------- Closing the window ---------------
 window.close()

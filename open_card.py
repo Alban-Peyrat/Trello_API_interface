@@ -6,7 +6,7 @@ import re
 import webbrowser
 
 # Internal import
-import Trello_API_Search as search
+import api_py.Trello_API_Search as search
 
 # Load Trello API settings
 with open('./settings.json', encoding="utf-8") as f:
@@ -26,3 +26,4 @@ if len(res.data["cards"]) == 1:
     print("Ouverture du ticket : " + res.data["cards"][0]["name"])
 else:
     print("Erreur : {} tickets trouvés".format(len(res.data["cards"])))
+print("\n\n\n")

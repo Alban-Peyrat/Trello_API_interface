@@ -7,6 +7,11 @@ function trelloApiBoards(api, API_KEY, TOKEN, service = 'Trello_Boards', data={}
     }
     let url;
     let params = "";
+    for (let key in data) {
+        if (key !== "id"){
+            params += `&${key}=${data[key]}`
+        }
+    }
     // Différentes API
     switch (api){
         case "get_labels":

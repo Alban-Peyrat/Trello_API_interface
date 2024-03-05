@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+    <!-- Séparer le CSS et le JS finalement-->
+<head>
+    <title>SID ArchiRès - Recherche de tickets dans Suivi_des_demandes</title>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="../ArchiRes_theme/favicon.png"/>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+    <script src="../js_local_settings.js" charset="UTF-8"></script>
+</head>
+<header>
+    <p id="title">SID ArchiRès</p>
+    <p id="subtitle">Recherche de tickets dans <a href="">Suivi_des_demandes</a></p>
+</header>
+<body>
+    <div id="search-form">
+        <table id="search-form-table">
+            <tbody>
+                <tr>
+                    <td class="search-index">Tous champs :</td>
+                    <td colspan="2">
+                        <label for="search-form-all1-checkbox_not" class="not-boolean"><input type="checkbox" name="search-form-all1-checkbox" value="not" id="search-form-all1-checkbox_not">Sauf</label><br/>
+                        <input id="search-form-all1" type="text" size="40">
+                    </td>
+                    <td>
+                        <label for="search-form-all2-checkbox_not" class="not-boolean"><input type="checkbox" name="search-form-all2-checkbox" value="not" id="search-form-all2-checkbox_not">Sauf</label><br/>
+                        <input id="search-form-all2" type="text">
+                    </td>
+                    <td>
+                        <label for="search-form-all3-checkbox_not" class="not-boolean"><input type="checkbox" name="search-form-all3-checkbox" value="not" id="search-form-all3-checkbox_not">Sauf</label><br/>
+                        <input id="search-form-all3" type="text">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="search-index">Nom :</td>
+                    <td colspan="2">
+                        <label for="search-form-name1-checkbox_not" class="not-boolean"><input type="checkbox" name="search-form-name1-checkbox" value="not" id="search-form-name1-checkbox_not">Sauf</label><br/>
+                        <input id="search-form-name1" type="text" size="40">
+                    </td>
+                    <td>
+                        <label for="search-form-name2-checkbox_not" class="not-boolean"><input type="checkbox" name="search-form-name2-checkbox" value="not" id="search-form-name2-checkbox_not">Sauf</label><br/>
+                        <input id="search-form-name2" type="text">
+                    </td>
+                    <td>
+                        <label for="search-form-name3-checkbox_not" class="not-boolean"><input type="checkbox" name="search-form-name3-checkbox" value="not" id="search-form-name3-checkbox_not">Sauf</label><br/>
+                        <input id="search-form-name3" type="text">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="search-index">Description :</td>
+                    <td colspan="2">
+                        <label for="search-form-description1-checkbox_not" class="not-boolean"><input type="checkbox" name="search-form-description1-checkbox" value="not" id="search-form-description1-checkbox_not">Sauf</label><br/>
+                        <input id="search-form-description1" type="text" size="40">
+                    </td>
+                    <td>
+                        <label for="search-form-description2-checkbox_not" class="not-boolean"><input type="checkbox" name="search-form-description2-checkbox" value="not" id="search-form-description2-checkbox_not">Sauf</label><br/>
+                        <input id="search-form-description2" type="text">
+                    </td>
+                    <td>
+                        <label for="search-form-description3-checkbox_not" class="not-boolean"><input type="checkbox" name="search-form-description3-checkbox" value="not" id="search-form-description3-checkbox_not">Sauf</label><br/>
+                        <input id="search-form-description3" type="text">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="search-index">Commentaire :</td>
+                    <td colspan="2">
+                        <label for="search-form-comment1-checkbox_not" class="not-boolean"><input type="checkbox" name="search-form-comment1-checkbox" value="not" id="search-form-comment1-checkbox_not">Sauf</label><br/>
+                        <input id="search-form-comment1" type="text" size="40">
+                    </td>
+                    <td>
+                        <label for="search-form-comment2-checkbox_not" class="not-boolean"><input type="checkbox" name="search-form-comment2-checkbox" value="not" id="search-form-comment2-checkbox_not">Sauf</label><br/>
+                        <input id="search-form-comment2" type="text">
+                    </td>
+                    <td>
+                        <label for="search-form-comment3-checkbox_not" class="not-boolean"><input type="checkbox" name="search-form-comment3-checkbox" value="not" id="search-form-comment3-checkbox_not">Sauf</label><br/>
+                        <input id="search-form-comment3" type="text">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="search-index">Listes de tâches :</td>
+                    <td colspan="2">
+                        <label for="search-form-checklist1-checkbox_not" class="not-boolean"><input type="checkbox" name="search-form-checklist1-checkbox" value="not" id="search-form-checklist1-checkbox_not">Sauf</label><br/>
+                        <input id="search-form-checklist1" type="text" size="40">
+                    </td>
+                    <td>
+                        <label for="search-form-checklist2-checkbox_not" class="not-boolean"><input type="checkbox" name="search-form-checklist2-checkbox" value="not" id="search-form-checklist2-checkbox_not">Sauf</label><br/>
+                        <input id="search-form-checklist2" type="text">
+                    </td>
+                    <td>
+                        <label for="search-form-checklist3-checkbox_not" class="not-boolean"><input type="checkbox" name="search-form-checklist3-checkbox" value="not" id="search-form-checklist3-checkbox_not">Sauf</label><br/>
+                        <input id="search-form-checklist3" type="text">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="search-index">Labels :</td>
+                    <!-- Laisser l'option vide pour pouvoir désélectionner tout -->
+                    <td><select id="search-form-label-application" multiple size="10"><option value=""></option></select></td>
+                    <td><select id="search-form-label-type" multiple size="10"><option value=""></option></select></td>
+                    <td><select id="search-form-label-dev" multiple size="10"><option value=""></option></select></td>
+                    <td><select id="search-form-label-school" multiple size="10"><option value=""></option></select></td>
+                </tr>
+                <tr>
+                    <td class="search-index">Urgent ?</td>
+                <td><input type="checkbox" name="urgent-checkbox" id="urgent-checkbox"><label for="urgent-checkbox">Oui</label></td>
+                </tr>
+                <tr>
+                    <td class="search-index">Liste :</td>
+                    <td><select id="search-form-lists"><option value=""></option></select></td>
+                    <td>Exclure <select id="search-form-exclude-lists1"><option value=""></option></select></td>
+                    <td>Exclure <select id="search-form-exclude-lists2"><option value=""></option></select></td>
+                    <td>Exclure <select id="search-form-exclude-lists3"><option value=""></option></select></td>
+                </tr>
+                <tr>
+                    <td class="search-index">Date de modification :</td>
+                    <td>Dans les <input id="search-edited-manual-value" type="text" size="4"> derniers jours</td>
+                    <td><input type="radio" name="edited-radio-button" value="day" id="edited-radio-button_day"><label for="edited-radio-button_day">Aujourd'hui</label></td>
+                    <td><input type="radio" name="edited-radio-button" value="week" id="edited-radio-button_week"><label for="edited-radio-button_week">Semaine</label></td>
+                    <td><input type="radio" name="edited-radio-button" value="month" id="edited-radio-button_month"><label for="edited-radio-button_month">Mois</label></td>
+                </tr>
+                <tr>
+                    <td class="search-index">Statut :</td>
+                    <td><input type="checkbox" name="status-open-checkbox" value="open" id="status-open-checkbox_open"><label for="status-open-checkbox_open">Ouvert</label></td>
+                    <td><input type="checkbox" name="status-open-checkbox" value="closed" id="status-open-checkbox_closed"><label for="status-open-checkbox_closed">Fermé</label></td>
+                </tr>
+                <tr>
+                    <td class="search-index">Tri :</td>
+                    <td><input type="radio" name="sort-radio-button" value="created" id="sort-radio-button_created" checked><label for="sort-radio-button_created">Date de création</label></td>
+                    <td><input type="radio" name="sort-radio-button" value="edited" id="sort-radio-button_edited"><label for="sort-radio-button_edited">Date de modification</label></td>
+                    <td><input type="radio" name="sort-radio-button" value="due" id="sort-radio-button_due"><label for="sort-radio-button_due">Date de fermeture</label></td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="simple-search-buttons">
+            <button id="search-button">Lancer la recherche</button>
+            <button id="advanced-edit-button">Passer en recherche avancée</button>
+            <button id="advanced-search-button">Vider la requête avancée</button>
+            <button id="reset-search-button">Réinitialiser</button>
+        </div>
+        <div id="advanced-search-form">
+            <p>Avancée : <input id="advanced-search-input" type="text" size="120"></p>
+        </div>
+        
+    </div>
+    <div id="search-results">
+        <h1>Résultats de la recherche</h1>
+        <p>Requête utilisée : <span id="query-used"></span></p>
+        <table id="table-list-id">
+            <thead>
+                <tr>
+                    <th>Numéro de ticket</th>
+                    <th>Liste</th>
+                    <th>Labels</th>
+                    <th>Nom du ticket</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- <tr>
+                    <td class="num-tickets"><a href="" target="_blank">#AR71</a></td>
+                    <td class="search-result-list">Nom de la liste</span></td>
+                    <td class="labels"><span class="label" data-id="label-12345" style="background-color: couleurTrello-les-tirets;">Bokeh</span> <span class="label" style="background-color: blue;">ArchiRès</span> <span class="label" style="background-color: cyan;">Dev&nbsp;-&nbsp;Python</span></td>
+                    <td class="name">[Bokeh] Les inputs texte se vident de leur valeur quand on revient dessus depuis le bouton retour au formulaire</td>
+                </tr> -->
+
+            </tbody>
+        </table>
+    </div>
+</body>
+<script src="../api_js/boards.js" charset="UTF-8"></script>
+<script src="../api_js/lists.js" charset="UTF-8"></script>
+<script src="ress.js" charset="UTF-8"></script>
+<script src="search_UI.js" charset="UTF-8"></script>
+</html>
