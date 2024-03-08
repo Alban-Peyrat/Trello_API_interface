@@ -190,3 +190,13 @@ td.closed-request * {
 #search-results #query-used {
     font-style: italic;
 }
+
+#search-form input[type="text"], #search-form select, #search-form option {
+    background-color: #9FDEFF;
+    color: #121212;
+}
+
+#simple-search-buttons button {
+    background-color: #9FDEFF;
+    color: #121212;   
+}
