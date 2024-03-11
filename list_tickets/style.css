@@ -194,6 +194,7 @@ td.closed-request * {
 #search-form input[type="text"], #search-form select, #search-form option {
     background-color: #9FDEFF;
     color: #121212;
+    max-width: 95%;
 }
 
 #simple-search-buttons button {
