@@ -284,3 +284,10 @@ trelloLabels.then(labels => {
     })
 
 })
+
+// Launch search by pressing Enter ky
+document.getElementById("search-form").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        searchTrelloCards();
+    }
+  });
