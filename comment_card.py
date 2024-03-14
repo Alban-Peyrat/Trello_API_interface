@@ -3,6 +3,7 @@
 # External import
 import json
 import re
+import argparse
 
 # Internal import
 from ArchiRes_Theme.theme import *
@@ -10,6 +11,11 @@ from ArchiRes_Theme.theme import *
 import api_py.Trello_API_boards as boards
 import api_py.Trello_API_cards as cards
 import api_py.Trello_API_Search as search
+
+# Add command line arg
+parser = argparse.ArgumentParser()
+parser.add_argument("-i", "--id", type=int, default=-1, required=False)
+args = parser.parse_args()
 
 service = "Python_Trello_Comment_Card"
 
@@ -23,9 +29,13 @@ board = settings["specific_board_id"]
 nom_createur = settings["nom_createur"]
 
 # Get card
-ticket_nb = input("Numéro du ticket (sans #AR) : ")
+ticket_nb = None
+if args.id == -1:
+    ticket_nb = input("Numéro du ticket (sans #AR) : ")
+else:
+    ticket_nb = args.id
 
-res = search.Trello_API_Search('comment:"N° ticket ArchiRès : {}" board:{}'.format(ticket_nb, board), API_KEY=API_KEY, TOKEN=TOKEN)
+res = search.Trello_API_Search(f'comment:"N° ticket ArchiRès : {ticket_nb}" board:{board}', API_KEY=API_KEY, TOKEN=TOKEN)
 
 def __leave():
     print("\n\n\n")
