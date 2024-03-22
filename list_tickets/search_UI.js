@@ -1,166 +1,21 @@
-// Faire un JS ressource
+// ------------------------- Init -------------------------
 
 let service = "Javascript_Trello_Search"
 let form = document.querySelector("#search-form #search-form-table tbody");
 
-// Translate trello colors
-const search_label_color_mapping = {
-    "yellow_light":"application",
-    "orange_light":"type",
-    "sky_dark":"dev",
-    "black_dark":"school",
-    "pink_dark":"fermeture"
-};
-
-// Adds the link to the board in the subtitle
-document.getElementById("subtitle").querySelector("a").setAttribute("href", `https://www.trello.com/b/${settings["specific_board_id"]}`)
+// ------------------------- Functions added to HTML elements -------------------------
 
 // Empties the advanced search input
 function resetAdvancedSearch(){
     document.getElementById("advanced-search-input").value = "";
 }
 
-// https://stackoverflow.com/questions/5866169/how-to-get-all-selected-values-of-a-multiple-select-box
-function getSelectValues(elem) {
-    let result = [];
-    let options = elem.selectedOptions;
-  
-    for (let ii = 0; ii < options.length; ii++) {
-        result.push(options[ii].text);
-    }
-    return result;
-}
-
-function getLabelsSelectedvalueFromSearchForm(labelType){
-    let output = [];
-    let selectedOptions = getSelectValues(form.querySelector(`#search-form-label-${labelType}`));
-    selectedOptions.forEach(option => {
-        if (option.trim() !== ""){
-            output.push(`label:"${option}"`)
-        }
-    })
-    return output
-}
-
-function getListsFromSearchForm(){
-    let output = [];
-    let includeList = getSelectValues(form.querySelector(`#search-form-lists`))[0];
-    if (includeList.trim() !== "") {
-        output.push(`list:"${includeList}"`);
-    }
-    for (let ii = 1; ii <= 3; ii++){
-        let excludeList = getSelectValues(form.querySelector(`#search-form-exclude-lists${ii}`))[0];
-        if (excludeList.trim() !== "") {
-            output.push(`-list:"${excludeList}"`);
-        }
-    }
-    return output
-}
-
-function getTextInputsFromSearchForm(index){
-    let output = [];
-    for (let ii = 1; ii <= 3; ii++) {
-        let txt = form.querySelector(`#search-form-${index}${ii}`).value.trim();
-        if (txt !== ""){
-            let prepend = "";
-            // Prepare the index + negative if needed
-            if (index !== "all"){
-                prepend = `${index}:`
-            }
-            if (form.querySelector(`#search-form-${index}${ii}-checkbox_not`).checked) {
-                prepend = `-${prepend}`;
-            }
-            // Adds the prepend to each word
-            txt.split(" ").forEach(word => {
-                word = word.trim();
-                if (word !== ""){
-                    output.push(`${prepend}${word}`)
-                }
-            })
-        }
-    }
-    return output
-}
-
-function searchForUrgent(){
-    if (form.querySelector(`#urgent-checkbox`).checked) {
-        return [`label:"Urgent"`]
-    }else {
-        return []
-    }
-}
-
-function getDateFromSearchForm(){
-    let daysInput = form.querySelector("#search-edited-manual-value").value.trim();
-    
-    // If something is written, ignores the radio inputs
-    // EVEN IF IT'S AN INVALID VALUE (allows to cancel a radio input)
-    if (daysInput !== "") {
-        daysInput = parseInt(daysInput);
-        // If a number is in 
-        if (Number.isInteger(daysInput) && daysInput > 0) {
-            return [`edited:${daysInput}`];
-        } else {
-            return [];
-        }
-    } else {
-        let selectedRadioButton = form.querySelector('input[name="edited-radio-button"]:checked');
-        if (selectedRadioButton === null){
-            return []
-        } else {
-            return [`edited:${selectedRadioButton.value}`]
-        }
-    }
-
-}
-
-function getOpenCheckboxesFromSearchForm(){
-    let checkboxes = form.querySelectorAll('input[name="status-open-checkbox"]:checked');
-    // If no option are selected OR every options is selected, don't do anything because it defaults to all requests
-    if (checkboxes.length !== 1) {
-        return []
-    }else {
-        return [`is:${checkboxes[0].value}`]
-    }
-}
-
-// Returns the search form as a string
-// Should be called when launching the search from the form
-// And when using the button to advanced search
-function searchFormToString(){
-    let argumentList = [].concat(
-        getTextInputsFromSearchForm("all"),
-        getTextInputsFromSearchForm("name"),
-        getTextInputsFromSearchForm("description"),
-        getTextInputsFromSearchForm("comment"),
-        getTextInputsFromSearchForm("checklist"),
-        getLabelsSelectedvalueFromSearchForm("application"),
-        getLabelsSelectedvalueFromSearchForm("type"),
-        getLabelsSelectedvalueFromSearchForm("dev"),
-        getLabelsSelectedvalueFromSearchForm("school"),
-        searchForUrgent(),
-        getListsFromSearchForm(),
-        getDateFromSearchForm(),
-        getOpenCheckboxesFromSearchForm(),
-        getLabelsSelectedvalueFromSearchForm("fermeture")
-    );
-
-    return `${argumentList.join(" ")} sort:${form.querySelector('input[name="sort-radio-button"]:checked').value}`.trim()
-    // remplir le board
-}
-
-function getAdvancedSearchContent(){
-    return document.querySelector("#advanced-search-form #advanced-search-input").value.trim();
-}
-
-function isAdvancedSearchEmpty(){
-    return (getAdvancedSearchContent() === "")
-}
-
+// Fills the advaned search based on the form content
 function formToAdvancedSearch(){
     document.querySelector("#advanced-search-form #advanced-search-input").value = searchFormToString();
 }
 
+// Resets the search (form & advanced)
 function resetSearch(){
     // Advanced Search
     resetAdvancedSearch();
@@ -184,6 +39,7 @@ function resetSearch(){
     })
 }
 
+// Laucnhes the search
 function searchTrelloCards(){
     // Get query
     let query = "";
@@ -219,11 +75,143 @@ function searchTrelloCards(){
     })
 }
 
-// Adds JS to the buttons
-document.getElementById("search-button").addEventListener('click', searchTrelloCards, false);
-document.getElementById("advanced-edit-button").addEventListener('click', formToAdvancedSearch, false);
-document.getElementById("empty-advanced-search-button").addEventListener('click', resetAdvancedSearch, false);
-document.getElementById("reset-search-button").addEventListener('click', resetSearch, false);
+// ------------------------- Functions to handle the form -------------------------
+
+// Get the selected values of a select element in the form (request type)
+function getLabelsSelectedvalueFromSearchForm(labelType){
+    let output = [];
+    let selectedOptions = getSelectValues(form.querySelector(`#search-form-label-${labelType}`));
+    selectedOptions.forEach(option => {
+        if (option.trim() !== ""){
+            output.push(`label:"${option}"`)
+        }
+    })
+    return output
+}
+
+// Get the list values (already formatted for the query)
+function getListsFromSearchForm(){
+    let output = [];
+    let includeList = getSelectValues(form.querySelector(`#search-form-lists`))[0];
+    if (includeList.trim() !== "") {
+        output.push(`list:"${includeList}"`);
+    }
+    for (let ii = 1; ii <= 3; ii++){
+        let excludeList = getSelectValues(form.querySelector(`#search-form-exclude-lists${ii}`))[0];
+        if (excludeList.trim() !== "") {
+            output.push(`-list:"${excludeList}"`);
+        }
+    }
+    return output
+}
+
+// Gets the text inputs values for an index (already formatted for the query)
+function getTextInputsFromSearchForm(index){
+    let output = [];
+    for (let ii = 1; ii <= 3; ii++) {
+        let txt = form.querySelector(`#search-form-${index}${ii}`).value.trim();
+        if (txt !== ""){
+            let prepend = "";
+            // Prepare the index + negative if needed
+            if (index !== "all"){
+                prepend = `${index}:`
+            }
+            if (form.querySelector(`#search-form-${index}${ii}-checkbox_not`).checked) {
+                prepend = `-${prepend}`;
+            }
+            // Adds the prepend to each word
+            txt.split(" ").forEach(word => {
+                word = word.trim();
+                if (word !== ""){
+                    output.push(`${prepend}${word}`)
+                }
+            })
+        }
+    }
+    return output
+}
+
+// Gets the argument for a search on urgent requests (already formatted for the query)
+function searchForUrgent(){
+    if (form.querySelector(`#urgent-checkbox`).checked) {
+        return [`label:"Urgent"`]
+    }else {
+        return []
+    }
+}
+
+// Gets the date argument (already formatted for the query)
+function getDateFromSearchForm(){
+    let daysInput = form.querySelector("#search-edited-manual-value").value.trim();
+    
+    // If something is written, ignores the radio inputs
+    // EVEN IF IT'S AN INVALID VALUE (allows to cancel a radio input)
+    if (daysInput !== "") {
+        daysInput = parseInt(daysInput);
+        // If a number is in 
+        if (Number.isInteger(daysInput) && daysInput > 0) {
+            return [`edited:${daysInput}`];
+        } else {
+            return [];
+        }
+    } else {
+        let selectedRadioButton = form.querySelector('input[name="edited-radio-button"]:checked');
+        if (selectedRadioButton === null){
+            return []
+        } else {
+            return [`edited:${selectedRadioButton.value}`]
+        }
+    }
+}
+
+// Gets the status of tickets (closed or opened, not the label part) (already foramtted for the query)
+function getOpenCheckboxesFromSearchForm(){
+    let checkboxes = form.querySelectorAll('input[name="status-open-checkbox"]:checked');
+    // If no option are selected OR every options is selected, don't do anything because it defaults to all requests
+    if (checkboxes.length !== 1) {
+        return []
+    }else {
+        return [`is:${checkboxes[0].value}`]
+    }
+}
+
+// Returns the entire search form as a string
+// Should be called when launching the search from the form
+// And when using the button to advanced search
+function searchFormToString(){
+    let argumentList = [].concat(
+        getTextInputsFromSearchForm("all"),
+        getTextInputsFromSearchForm("name"),
+        getTextInputsFromSearchForm("description"),
+        getTextInputsFromSearchForm("comment"),
+        getTextInputsFromSearchForm("checklist"),
+        getLabelsSelectedvalueFromSearchForm("application"),
+        getLabelsSelectedvalueFromSearchForm("type"),
+        getLabelsSelectedvalueFromSearchForm("dev"),
+        getLabelsSelectedvalueFromSearchForm("school"),
+        searchForUrgent(),
+        getListsFromSearchForm(),
+        getDateFromSearchForm(),
+        getOpenCheckboxesFromSearchForm(),
+        getLabelsSelectedvalueFromSearchForm("fermeture")
+    );
+
+    return `${argumentList.join(" ")} sort:${form.querySelector('input[name="sort-radio-button"]:checked').value}`.trim()
+}
+
+// Gets the content of the advanced search
+function getAdvancedSearchContent(){
+    return document.querySelector("#advanced-search-form #advanced-search-input").value.trim();
+}
+
+// Returns if the advanced search is filled
+function isAdvancedSearchEmpty(){
+    return (getAdvancedSearchContent() === "")
+}
+
+// ------------------------- Adding missing HTML content -------------------------
+
+// ------------- Lists -------------
 
 // Get all lists
 var trelloAllLists = trelloApiBoards("get_lists",
@@ -231,17 +219,6 @@ var trelloAllLists = trelloApiBoards("get_lists",
     settings["TOKEN"],
     service = service,
     data={id:settings["specific_board_id"]});
-
-// Prepare Markdown converter
-// Uses https://github.com/showdownjs/showdown
-var converter = new showdown.Converter()
-
-function __generateSelectOption(text, value, parentQuerySelector){
-    let elem = document.createElement("option");
-    elem.setAttribute("value", value);
-    elem.textContent = text;
-    document.querySelector(parentQuerySelector).appendChild(elem)
-}
 
 // Create lists option
 trelloAllLists.then(lists => {
@@ -253,28 +230,16 @@ trelloAllLists.then(lists => {
     })
 })
 
-//https://stackoverflow.com/questions/8837454/sort-array-of-objects-by-single-key-with-date-value
-function sort_arr_of_obj_by_key_val(arr, key){
-    return arr.sort(function(a, b) {
-        let keyA = a[key];
-        let keyB = b[key];
-        // Compare the 2 values
-        if (keyA < keyB) return -1;
-        if (keyA > keyB) return 1;
-        return 0;
-      });
-}
+// ------------- Labels -------------
 
-
-
-// Create labels option 
+// Get all labels
 var trelloLabels  = trelloApiBoards("get_labels",
     settings["API_KEY"],
     settings["TOKEN"],
     service = service,
     data={id:settings["specific_board_id"]});
 
-
+// Create labels option 
 trelloLabels.then(labels => {
     labels = sort_arr_of_obj_by_key_val(labels, "name");
     labels.forEach(label => {
@@ -284,6 +249,14 @@ trelloLabels.then(labels => {
     })
 
 })
+
+// ------------------------- Adding functions to HTML elements -------------------------
+
+// Adds JS to the buttons
+document.getElementById("search-button").addEventListener('click', searchTrelloCards, false);
+document.getElementById("advanced-edit-button").addEventListener('click', formToAdvancedSearch, false);
+document.getElementById("empty-advanced-search-button").addEventListener('click', resetAdvancedSearch, false);
+document.getElementById("reset-search-button").addEventListener('click', resetSearch, false);
 
 // Launch search by pressing Enter ky
 document.getElementById("search-form").addEventListener("keypress", function(event) {

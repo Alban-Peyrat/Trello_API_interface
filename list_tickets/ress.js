@@ -1,4 +1,12 @@
-// Translate trello colors
+// ------------------------- Init -------------------------
+
+// Prepare Markdown converter
+// Uses https://github.com/showdownjs/showdown
+var converter = new showdown.Converter()
+
+// ------------------------- Mappings -------------------------
+
+// Translate trello colors to hex colors
 const color_mapping = {
     "yellow_light":"#fdfae5",
     "orange_light":"#fdf4e7",
@@ -9,6 +17,17 @@ const color_mapping = {
     "black_dark":"#c1c7d0",
     "pink_dark":"#f697d1"
 };
+
+// Translate trello label colors to label type
+const search_label_color_mapping = {
+    "yellow_light":"application",
+    "orange_light":"type",
+    "sky_dark":"dev",
+    "black_dark":"school",
+    "pink_dark":"fermeture"
+};
+
+// ------------------------- Utils -------------------------
 
 // Sort array of object
 //https://stackoverflow.com/questions/8837454/sort-array-of-objects-by-single-key-with-date-value
@@ -23,9 +42,33 @@ function sort_arr_of_obj_by_key_val(arr, key){
       });
 }
 
-// Prepare Markdown converter
-// Uses https://github.com/showdownjs/showdown
-var converter = new showdown.Converter()
+// Get select values
+// https://stackoverflow.com/questions/5866169/how-to-get-all-selected-values-of-a-multiple-select-box
+function getSelectValues(elem) {
+    let result = [];
+    let options = elem.selectedOptions;
+  
+    for (let ii = 0; ii < options.length; ii++) {
+        result.push(options[ii].text);
+    }
+    return result;
+}
+
+// Add an option to a select
+function __generateSelectOption(text, value, parentQuerySelector){
+    let elem = document.createElement("option");
+    elem.setAttribute("value", value);
+    elem.textContent = text;
+    document.querySelector(parentQuerySelector).appendChild(elem)
+}
+
+// ------------------------- Update UI head -------------------------
+
+// Adds the link to the board in the subtitle
+document.getElementById("subtitle").querySelector("a").setAttribute("href", `https://www.trello.com/b/${settings["specific_board_id"]}`)
+
+
+// ------------------------- Ticket filtering -------------------------
 
 //Function that hides tickets without this id
 function filter() {
@@ -70,10 +113,14 @@ function unfilterAll(){
     update_all_lists_ticket_count()
 }
 
+// ------------------------- Description handling -------------------------
+
 // Toogles the ticket description
 function toggleDesc(){
     this.querySelector("div").classList.remove("hide");
 }
+
+// ------------------------- Updating number of tickets -------------------------
 
 // Updates the number of tickets in the list
 function tickets_count(listId){
@@ -89,6 +136,7 @@ function update_all_lists_ticket_count(){
     })
 }
 
+// ------------------------- Generating cards -------------------------
 
 function generateCardRow(card){
     // Creates the line

@@ -1,6 +1,10 @@
+// ------------------------- Init -------------------------
+
 var parent = document.getElementById("list-id");
 var service = "Javascript_Trello_List_Cards";
 var listCountFlags = {counts:false, lists:false, oldList:false};
+
+// ------------------------- Classes definition -------------------------
 
 class Count {
     constructor() {
@@ -32,12 +36,82 @@ class Count {
     }
 }
 
+// ------------------------- Functions added to HTML elements -------------------------
+
+// Toggle list displaying its cards
+function toggleListRequests(){
+    this.classList.toggle("list-opened");
+    this.classList.toggle("list-closed");
+    document.getElementById(`table-${this.dataset.listId}`).classList.toggle("hide");
+}
+
+// Toggle displaying cards if they are open and/or closed
+function toggleCardsVisibility(){
+    console.log(this, this.dataset)
+    document.querySelectorAll("#div-request-visibility-buttons button").forEach(button => {
+        button.classList.remove("visibility-button-selected");
+    })
+    this.classList.add("visibility-button-selected");
+    document.querySelectorAll("tr.card").forEach(card => {
+        card.classList.add("card-global-visbility-hide");
+        if (this.dataset.showOpen == "true" && card.dataset.closed == "false") {
+            card.classList.remove("card-global-visbility-hide");
+        }
+        if (this.dataset.showClosed == "true" && card.dataset.closed == "true") {
+            card.classList.remove("card-global-visbility-hide");
+        }
+    })
+}
+
+// ------------------------- Functions to generate HTML elements -------------------------
+
+// List header (Title / Name or whatever you want to call it)
+function generateListHeader(list){
+    let listName = document.createElement("h1");
+    listName.id = `header-${list.id}`;
+    listName.setAttribute("data-list-id", `${list.id}`);
+    listName.setAttribute("class", "list-name list-opened");
+    listName.innerHTML = list.name + ` (<span data-list-id="${list.id}"></span> tickets)`;
+    listName.addEventListener('click', toggleListRequests, false);
+
+    return listName
+}
+
+// List table with its headers
+function generateListTableWithHead(list){
+    let table = document.createElement("table");
+    table.setAttribute("id", `table-${list.id}`);
+
+    // Creates the thead
+    let thead = document.createElement("thead");
+    let theadTr = document.createElement("tr");
+    let headers = ["Numéro de ticket", "Type de demande", "Labels", "Nom du ticket"];
+    for (let ii = 0; ii < headers.length; ii++){
+        let th = document.createElement("th");
+        th.textContent = headers[ii];
+        theadTr.appendChild(th);
+    }
+    thead.appendChild(theadTr);
+    table.appendChild(thead);
+    
+    return table
+}
+
+// ------------------------- Adding missing HTML content -------------------------
+
+// ------------- Ticket types -------------
+
 // Creates all filters types
 for (color in settings["label_colors"]){
     let labelP = document.createElement("p");
     labelP.innerHTML = `<span class="label" style="background-color:${color_mapping[settings["label_colors"][color]]}" data-trello-color="${settings["label_colors"][color]}">Label ${color}\u00A0:</span> `;
     document.getElementById("filter-management").appendChild(labelP);
 }
+
+// ------------- Every label -------------
+
+var trelloLabelsCount = {};
+var trelloListsCount = {};
 
 // Get all labels
 var trelloLabels  = trelloApiBoards("get_labels",
@@ -46,9 +120,7 @@ var trelloLabels  = trelloApiBoards("get_labels",
     service = service,
     data={id:settings["specific_board_id"]});
 
-var trelloLabelsCount = {};
-var trelloListsCount = {};
-
+// For eahc label, create an element
 trelloLabels.then(labels => {
     // #AR189 : sort labels
     labels = sort_arr_of_obj_by_key_val(labels, "name");
@@ -67,12 +139,15 @@ trelloLabels.then(labels => {
         document.querySelector(`#filter-management p span[data-trello-color="${label["color"]}"]`).parentElement.append(", ");   
     })
     
+    // Remove the last useless comma
     document.querySelectorAll("#filter-management p").forEach(elm =>{
     if (elm.lastChild){
         elm.lastChild.remove();
     }
     })
 })
+
+// ------------- Number of tickets -------------
 
 // Gets total number of tickets
 var trelloAllCards = trelloApiBoards("get_all_cards",
@@ -127,6 +202,10 @@ trelloAllCards.then(cards => {
     listCountFlags.counts = true;
 })
 
+// ------------- Lists & tickets -------------
+
+var closedLists = [];
+
 // Get all lists
 var trelloAllLists = trelloApiBoards("get_lists",
     settings["API_KEY"],
@@ -134,43 +213,11 @@ var trelloAllLists = trelloApiBoards("get_lists",
     service = service,
     data={id:settings["specific_board_id"], filter:"all"});
 
-var closedLists = [];
-
-function generateListToCEntry(list){
+    function generateListToCEntry(list){
     let tocEntry = document.createElement("li");
     tocEntry.setAttribute("data-list-id", `${list.id}`);
     tocEntry.innerHTML = `<a href="#header-${list.id}">${list.name} (<span data-list-id="${list.id}"></span> tickets)</a>`;
     return tocEntry
-}
-
-function generateListHeader(list){
-    let listName = document.createElement("h1");
-    listName.id = `header-${list.id}`;
-    listName.setAttribute("data-list-id", `${list.id}`);
-    listName.setAttribute("class", "list-name list-opened");
-    listName.innerHTML = list.name + ` (<span data-list-id="${list.id}"></span> tickets)`;
-    listName.addEventListener('click', toggleListRequests, false);
-
-    return listName
-}
-
-function generateListTableWithHead(list){
-    let table = document.createElement("table");
-    table.setAttribute("id", `table-${list.id}`);
-
-    // Creates the thead
-    let thead = document.createElement("thead");
-    let theadTr = document.createElement("tr");
-    let headers = ["Numéro de ticket", "Type de demande", "Labels", "Nom du ticket"];
-    for (let ii = 0; ii < headers.length; ii++){
-        let th = document.createElement("th");
-        th.textContent = headers[ii];
-        theadTr.appendChild(th);
-    }
-    thead.appendChild(theadTr);
-    table.appendChild(thead);
-    
-    return table
 }
 
 // For each list
@@ -240,6 +287,8 @@ trelloAllLists.then(lists => {
     listCountFlags.oldList = true;
 })
 
+// ------------- Number of tickets (for Lists) -------------
+
 // Card count
 function addListCount(listId, count){
     let html = `${count.open}, <span class="list-count-closed">${count.closed}</span> / ${count.total}`
@@ -248,6 +297,7 @@ function addListCount(listId, count){
 
 }
 
+// Ensure we properly wait for things to load
 // https://stackoverflow.com/questions/22125865/how-to-wait-until-a-predicate-condition-becomes-true-in-javascript
 function WaitAddListCount() {
     if(!(listCountFlags.counts === true && listCountFlags.lists === true && listCountFlags.oldList === true)) {
@@ -270,3 +320,10 @@ function WaitAddListCount() {
     }
 }
 WaitAddListCount();
+
+// ------------------------- Adding functions to HTML elements -------------------------
+
+// Enable button visibility behaviour
+document.querySelectorAll("#div-request-visibility-buttons button").forEach(button => {
+    button.addEventListener('click', toggleCardsVisibility, false);
+})
