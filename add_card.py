@@ -33,6 +33,7 @@ idList = settings["create_card_default_list_id"]
 label_colors = settings["label_colors"]
 label_urgent = settings["label_urgent_id"]
 label_add_card = settings["label_created_by_python_add_card"]
+label_python_ar_ticket_to_link = settings["label_python_ar_ticket_to_link"]
 
 # Get all labels
 # LABELS = get_labels.Trello_API_get_labels(board, API_KEY=API_KEY, TOKEN=TOKEN).filter_by_color()
@@ -133,6 +134,7 @@ card_infos["idLabels"].append(label_add_card)
 card_infos["tickets"] = val["addCommentTickets"]
 tickets_base_regex = r"\d+";
 ticket_comment = ""
+has_AR_ticket = False
 if card_infos["tickets"] != "":
     ticket_comment = "Tickets liés `{}` : ".format(service)
     for plat in tickets_url:
@@ -140,10 +142,11 @@ if card_infos["tickets"] != "":
         for ticket in tickets:
             ticket_comment += ticket + " "
             if plat == "AR":
-                # faut que je transforme ça
-                card_infos["desc"] = "[Lié à #{}]({}{})\n".format(ticket, tickets_url[plat], ticket[2:]) + card_infos["desc"]
+                has_AR_ticket = True
+                card_infos["idLabels"].append(label_python_ar_ticket_to_link)
+                card_infos["desc"] = f"[Lié à #{ticket}]()" + card_infos["desc"]
             else:
-                card_infos["desc"] = "[Lié à #{}]({}{})\n".format(ticket, tickets_url[plat], ticket[2:]) + card_infos["desc"]
+                card_infos["desc"] = f"[Lié à #{ticket}]({tickets_url[plat]}{ticket[2:]})\n" + card_infos["desc"]
             
 new_card = cards.Trello_API_cards(
     api="new_card",
