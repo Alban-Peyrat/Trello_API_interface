@@ -197,6 +197,11 @@ td.closed-request * {
     max-width: 95%;
 }
 
+#search-form select[multiple] option:checked {
+    background-color: #660000;
+    color: #EBE0EB;
+}
+
 #simple-search-buttons button {
     background-color: #9FDEFF;
     color: #121212;   
