@@ -144,7 +144,7 @@ if card_infos["tickets"] != "":
             if plat == "AR":
                 has_AR_ticket = True
                 card_infos["idLabels"].append(label_python_ar_ticket_to_link)
-                card_infos["desc"] = f"[Lié à #{ticket}]()" + card_infos["desc"]
+                card_infos["desc"] = f"[Lié à #{ticket}]()\n" + card_infos["desc"]
             else:
                 card_infos["desc"] = f"[Lié à #{ticket}]({tickets_url[plat]}{ticket[2:]})\n" + card_infos["desc"]
             
