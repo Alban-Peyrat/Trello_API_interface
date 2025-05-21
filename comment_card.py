@@ -35,7 +35,7 @@ if args.id == -1:
 else:
     ticket_nb = args.id
 
-res = search.Trello_API_Search(f'comment:"N° ticket ArchiRès : {ticket_nb}" board:{board}', API_KEY=API_KEY, TOKEN=TOKEN)
+res = search.Trello_API_Search(f'comment:"N° ticket ArchiRès : {ticket_nb}" board:{board}', board, API_KEY=API_KEY, TOKEN=TOKEN)
 
 def __leave():
     print("\n\n\n")

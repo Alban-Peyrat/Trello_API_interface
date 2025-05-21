@@ -23,7 +23,7 @@ board = settings["specific_board_id"]
 nom_createur = settings["nom_createur"]
 label_python_ar_ticket_to_link = settings["label_python_ar_ticket_to_link"]
 
-res = search.Trello_API_Search(f'label:"PYTHON_AR_TICKET_TO_LINK" board:{board}', API_KEY=API_KEY, TOKEN=TOKEN)
+res = search.Trello_API_Search(f'label:"PYTHON_AR_TICKET_TO_LINK" board:{board}', board, API_KEY=API_KEY, TOKEN=TOKEN)
 
 # For each card to update
 card_list = res.data["cards"]
@@ -36,7 +36,7 @@ for card in card_list:
     for match in re.findall(r"\[Lié à \#AR\d+\]\(\)", card_desc):
         linked_card_id = re.findall(r"AR(\d+)", match)[0]
         # Get the link
-        link_res = search.Trello_API_Search(f'comment:"N° ticket ArchiRès : {linked_card_id}" board:{board}', API_KEY=API_KEY, TOKEN=TOKEN)
+        link_res = search.Trello_API_Search(f'comment:"N° ticket ArchiRès : {linked_card_id}" board:{board}', board, API_KEY=API_KEY, TOKEN=TOKEN)
 
         # Leave if no request found (or multiple)
         if len(link_res.data["cards"]) != 1:
