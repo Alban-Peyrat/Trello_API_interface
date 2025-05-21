@@ -8,3 +8,4 @@ mes_donnes/
 trello.bat
 trello-backup.config
 .env
+test.py

@@ -4,17 +4,6 @@
 import requests
 import json
 
-# ---------------------------------------- Ne pas mettre là
-# Load settings
-with open('settings.json', encoding="utf-8") as f:
-    settings = json.load(f)
-
-# Get the original file
-API_KEY = settings["API_KEY"]
-TOKEN = settings["TOKEN"]
-board = settings["specific_board_id"]
-# ---------------------------------------- Fin du ne pas mettre là
-
 class Trello_API_lists(object):
     """Trello_API_lists
     =======

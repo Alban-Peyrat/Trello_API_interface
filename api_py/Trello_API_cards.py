@@ -5,20 +5,6 @@ import requests
 import json
 import datetime
 
-# ---------------------------------------- Ne pas mettre là
-# # Load settings
-# with open('settings.json', encoding="utf-8") as f:
-#     settings = json.load(f)
-
-# # Get the original file
-# API_KEY = settings["API_KEY"]
-# TOKEN = settings["TOKEN"]
-# idList = settings["create_card_default_list_id"]
-# idLabels = ["636b89573b1806052382168b", "6371f95494e5ba0140868cdd"]
-# name = "Test création Python"
-# desc = "Test description"
-# ---------------------------------------- Fin du ne pas mettre là
-
 class Trello_API_cards(object):
     """Trello_API_cards
     =======
