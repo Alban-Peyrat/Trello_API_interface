@@ -72,7 +72,7 @@ else:
 
 # get lists
 res = boards.Trello_API_boards(
-    api="get_lists",
+    api=boards.Apis.GET_LISTS,
     API_KEY=API_KEY,
     TOKEN=TOKEN,
     service=service,

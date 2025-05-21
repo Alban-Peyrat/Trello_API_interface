@@ -12,5 +12,6 @@
 
 * [Documentation](https://support.atlassian.com/trello/docs/searching-for-cards-all-boards/)
 * [Documetnation API](https://developer.atlassian.com/cloud/trello/rest/api-group-search/#api-search-get)
+  * [Action types](https://developer.atlassian.com/cloud/trello/guides/rest-api/action-types/)
 
 

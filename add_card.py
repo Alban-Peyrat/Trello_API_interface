@@ -37,7 +37,7 @@ label_python_ar_ticket_to_link = settings["label_python_ar_ticket_to_link"]
 
 # Get all labels
 # LABELS = get_labels.Trello_API_get_labels(board, API_KEY=API_KEY, TOKEN=TOKEN).filter_by_color()
-LABELS = boards.Trello_API_boards(api="get_labels", API_KEY=API_KEY, TOKEN=TOKEN, data={"id":board}).filter_by_color()
+LABELS = boards.Trello_API_boards(api=boards.Apis.GET_LABELS, API_KEY=API_KEY, TOKEN=TOKEN, data={"id":board}).filter_by_color()
 
 # Creates the selections for labels in the GUI
 LABELS_GUI = {}

@@ -35,7 +35,12 @@ import time
 import io
 import logging
 from logging.handlers import RotatingFileHandler
+from datetime import datetime
 from win10toast import ToastNotifier #for Windows notif
+
+# Internal import
+from api_py.Trello_API_boards import Trello_API_boards, Apis as Board_Apis
+from api_py.auth_vals import Action_Types
 
 import dotenv
 dotenv.load_dotenv()
@@ -173,19 +178,54 @@ def main():
 	if not os.path.exists(OUTPUT_DIRECTORY):
 		os.makedirs(OUTPUT_DIRECTORY)
 
-	# print('Backing up boards:')
 	epoch_time = str(int(time.time()))
 
 	for board in boards.json():
 		if ORGANIZATION_IDS and (not board["idOrganization"] or not board["idOrganization"] in ORGANIZATION_IDS):
 			continue
 
-		# print(u"    - {0} - {1} ({2})".format(board["idOrganization"], board["name"], board["id"]))
 		boardContents = requests.get(API_URL + "boards/" + board["id"], params=boardPayload)
+		# #AR691 : we need to edit this response buy getting other data from the baord
+		temp_data = boardContents.json()
+		# First, get comments
+		temp_data["arComments"] = []
+		FIRST_YEAR = os.getenv("SAVE_FIRST_YEAR")
+		curr_date = datetime.now()
+		# get comments for every year, as we we have a 1000 actions returned limit
+		for year_index in range(int(FIRST_YEAR), curr_date.year + 1):
+			# Each semester is handled separately
+			for semester_index in range(0, 2):
+				# If first year, skip first semester
+				if int(FIRST_YEAR) == year_index and semester_index == 0:
+					continue
+				# If current month is in first semester, don't do 2nd semester
+				elif year_index == curr_date.year and curr_date.month < 7 and semester_index == 1:
+					continue
+				
+				# Set date limits
+				since = str(year_index) + "-01-01"
+				before = str(year_index) + "-06-30"
+				if semester_index == 1:
+					since = str(year_index) + "-07-01"
+					before = str(year_index) + "-12-31"
+
+				# query
+				action_response = Trello_API_boards(Board_Apis.GET_ACTIONS, API_KEY, TOKEN, data={"id":board["id"],"action_type":[Action_Types.COMMENT_CARD.value],"since":since,"before":before})
+				nb_actions = len(action_response.data)
+				temp_data["arComments"] += action_response.data
+				LOG.info(f"Comments between {since} and {before} : {nb_actions}")
+				if nb_actions == 1000:
+					LOG.error(f"Exceeded limit of comments, some comments could not be backed up")
+		# Now, get labels
+		temp_data["arLabels"] = []
+		label_response = Trello_API_boards(Board_Apis.GET_LABELS, API_KEY, TOKEN, data={"id":board["id"]})
+		temp_data["arLabels"] += label_response.data
+		LOG.info(f"Number of labels : {len(label_response.data)}")
+		# End of #AR691 
 		filename = boardFilename(OUTPUT_DIRECTORY, board, epoch_time)
 		with io.open(filename, 'w', encoding='utf8') as file:
 			args = dict( sort_keys=True, indent=4) if PRETTY_PRINT else dict()
-			data = json.dumps(boardContents.json(), ensure_ascii=False, **args)
+			data = json.dumps(temp_data, ensure_ascii=False, **args)
 			file.write(data)
 	
 	notif_msg=""

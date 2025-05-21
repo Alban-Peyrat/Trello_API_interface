@@ -7,7 +7,6 @@ import re
 # Internal import
 from ArchiRes_Theme.theme import *
 # import Trello_API_get_labels as get_labels
-import api_py.Trello_API_boards as boards
 import api_py.Trello_API_cards as cards
 import api_py.Trello_API_Search as search
 

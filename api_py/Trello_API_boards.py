@@ -3,6 +3,14 @@
 # External imports
 import requests
 import json
+from enum import Enum
+
+# Geez Louise what the hell is this
+
+class Apis(Enum):
+    GET_LABELS = 0
+    GET_LISTS = 1
+    GET_ACTIONS = 2
 
 class Trello_API_boards(object):
     """Trello_API_boards
@@ -17,9 +25,9 @@ class Trello_API_boards(object):
     - data {dict} : all informations needed to use the API
 """
 
-    def __init__(self, api, API_KEY, TOKEN, service='Trello_Boards', data={}):
+    def __init__(self, api:Apis, API_KEY:str, TOKEN:str, service='Trello_Boards', data={}):
         # self.logger = logging.getLogger(service)
-        self.endpoint = "https://api.trello.com/1/boards/"
+        self.endpoint = "https://api.trello.com/1/boards"
         self.service = service
         self.payload = {
             'key': API_KEY,
@@ -30,25 +38,39 @@ class Trello_API_boards(object):
             }
 
         # Différentes API
-        if api == "get_labels":
+        if api == Apis.GET_LABELS:
             self.payload["limit"] = 1000
             self.HTTPmethod = "GET"
             self.url = self.endpoint + "/" + data["id"] + "/labels"
-        elif api == "get_lists":
+        elif api == Apis.GET_LISTS:
             self.HTTPmethod = "GET"
             self.url = self.endpoint + "/" + data["id"] + "/lists"
-        
+        elif api == Apis.GET_ACTIONS:
+            self.payload["limit"] = 1000
+            self.HTTPmethod = "GET"
+            self.url = self.endpoint + "/" + data["id"] + "/actions"
+            # self.payload["page"] = 0 # Fun fact : page * limit needs to be under 1000
+            # if "page" in data:
+            #     self.payload["page"] = int(data["page"])
+            if "before" in data:
+                self.payload["before"] = data["before"]
+            if "since" in data:
+                self.payload["since"] = data["since"]
+            if "action_type" in data:
+                if type(data["action_type"]) == list:
+                    self.payload["filter"] = ",".join(data["action_type"])
+                elif type(data["action_type"]) == str:
+                    self.payload["filter"] = data["action_type"]
+        else:
+            self.status = "Error"
+            self.error_msg = "API not supported"
         try:
             r = requests.request(self.HTTPmethod, self.url, headers=self.headers, params=self.payload)
             r.raise_for_status()  
-        except requests.exceptions.HTTPError:
-            self.status = 'Error'
-            # self.logger.error("{} :: {} :: HTTP Status: {} || Method: {} || URL: {} || Response: {}".format(query, service, r.status_code, r.request.method, r.url, r.text))
-            self.error_msg = "Biblionumber inconnu ou service indisponible"
         except requests.exceptions.RequestException as generic_error:
             self.status = 'Error'
             # self.logger.error("{} :: Koha_API_PublicBiblio_Init :: Generic exception || URL: {} || {}".format(bibnb, url, generic_error))
-            self.error_msg = "Exception générique, voir les logs pour plus de détails"
+            self.error_msg = "Generic exception"
         else:
             self.response = r.content.decode('utf-8')
             self.data = json.loads(self.response)
